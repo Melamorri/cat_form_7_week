@@ -30,10 +30,16 @@ class Home extends StatefulWidget {
 class MyFormState extends State {
   final _formKey = GlobalKey<FormState>();
   Gender? _gender;
-  var _agreement = false;
-  bool checkbox1 = false;
-  bool checkbox2 = false;
-  bool checkbox3 = false;
+
+  Map<String, bool> values = {
+    'Сухой корм': false,
+    'Влажный корм': false,
+    'Натуральный корм': false,
+  };
+
+  // bool checkbox1 = false;
+  // bool checkbox2 = false;
+  // bool checkbox3 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +65,9 @@ class MyFormState extends State {
                   ),
                 ),
                 validator: (value) {
-                  if (value!.isEmpty)
+                  if (value!.isEmpty) {
                     return 'Пожалуйста, укажите кличку питомца';
+                  }
                 }),
             const SizedBox(height: 20.0),
             const Text(
@@ -99,8 +106,9 @@ class MyFormState extends State {
                   ),
                 ),
                 validator: (value) {
-                  if (value!.isEmpty)
+                  if (value!.isEmpty) {
                     return 'Пожалуйста, введите свои контактные данные';
+                  }
                 }),
             const SizedBox(height: 20.0),
             const Text(
@@ -119,8 +127,9 @@ class MyFormState extends State {
                   ),
                 ),
                 validator: (value) {
-                  if (value!.isEmpty)
+                  if (value!.isEmpty) {
                     return 'Пожалуйста, укажите породу питомца';
+                  }
                 }),
             const SizedBox(height: 20.0),
             const Text(
@@ -152,46 +161,63 @@ class MyFormState extends State {
               'Чем питается:',
               style: TextStyle(fontSize: 20.0),
             ),
-            CheckboxListTile(
-              title: Text(
-                'Сухой корм',
-                style: TextStyle(fontSize: 18.0),
+            SizedBox(
+              height: 250,
+              width: 250,
+              child: ListView(
+                children: values.keys.map((String key) {
+                  return CheckboxListTile(
+                    title: Text(key),
+                    value: values[key],
+                    onChanged: (bool? value) {
+                      setState(() {
+                        values[key] = value!;
+                      });
+                    },
+                  );
+                }).toList(),
               ),
-              controlAffinity: ListTileControlAffinity.leading,
-              value: checkbox1,
-              onChanged: (value) {
-                setState(() {
-                  checkbox1 = !checkbox1;
-                });
-              },
             ),
-            CheckboxListTile(
-              title: Text(
-                'Влажный корм',
-                style: TextStyle(fontSize: 18.0),
-              ),
-              controlAffinity: ListTileControlAffinity.leading,
-              value: checkbox2,
-              activeColor: Colors.green,
-              onChanged: (value) {
-                setState(() {
-                  checkbox2 = !checkbox2;
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: Text(
-                'Натуральный корм',
-                style: TextStyle(fontSize: 18.0),
-              ),
-              controlAffinity: ListTileControlAffinity.leading,
-              value: checkbox3,
-              onChanged: (value) {
-                setState(() {
-                  checkbox3 = !checkbox3;
-                });
-              },
-            ),
+            // CheckboxListTile(
+            //   title: Text(
+            //     'Сухой корм',
+            //     style: TextStyle(fontSize: 18.0),
+            //   ),
+            //   controlAffinity: ListTileControlAffinity.leading,
+            //   value: checkbox1,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       checkbox1 = !checkbox1;
+            //     });
+            //   },
+            // ),
+            // CheckboxListTile(
+            //   title: Text(
+            //     'Влажный корм',
+            //     style: TextStyle(fontSize: 18.0),
+            //   ),
+            //   controlAffinity: ListTileControlAffinity.leading,
+            //   value: checkbox2,
+            //   activeColor: Colors.green,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       checkbox2 = !checkbox2;
+            //     });
+            //   },
+            // ),
+            // CheckboxListTile(
+            //   title: Text(
+            //     'Натуральный корм',
+            //     style: TextStyle(fontSize: 18.0),
+            //   ),
+            //   controlAffinity: ListTileControlAffinity.leading,
+            //   value: checkbox3,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       checkbox3 = !checkbox3;
+            //     });
+            //   },
+            // ),
             const SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {
@@ -201,7 +227,7 @@ class MyFormState extends State {
 
                   if (_gender == null) {
                     text = 'Выберите пол питомца';
-                  } else if (!checkbox1 && !checkbox2 && !checkbox3) {
+                  } else if (!values.containsValue(true)) {
                     text = 'Укажите хотя бы один тип корма';
                   } else {
                     text = 'Форма успешно заполнена';
